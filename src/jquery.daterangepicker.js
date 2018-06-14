@@ -1621,14 +1621,26 @@
                  * Utilizado para permitir que o primeiro dia inativo
                  * possa ser utilizado como checkout nas reservas
                  */
+                var habilitou = false;
                 box.find('.day.validToDeparture').each(function () {
-                    $(this).addClass('valid tmp').removeClass('invalid');
+                    /**
+                     * Somente o primeiro dia inativo deve ser habilitado
+                     */
+                    if (habilitou) {
+                        return;
+                    }
+
+                    var time = parseInt($(this).attr('time'), 10);
+
+                    if (opt.start < time) {
+                        $(this).addClass('valid tmp').removeClass('invalid');
+                        habilitou = true;
+                    }
                 })
             } else {
                 /**
                  * Utilizado para quando a seleção seja desfeita inativar
-                 * o primeiro dia que tem checkin intativo e impedir que ele seja 
-                 * utilizado como início da seleção
+                 * os dias intativos que foram habilitados para checkout
                  */
                 box.find('.day.validToDeparture').each(function () {
                     $(this).addClass('invalid tmp').removeClass('valid');
